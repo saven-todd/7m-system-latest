@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 import CopyAllIcon from "@mui/icons-material/CopyAll";
@@ -11,15 +11,8 @@ import Button from "@mui/material/Button";
 import EditDomainModal from "../EditDomainModal";
 
 export default function DomainViewPage() {
-  const searchParams = useSearchParams();
-  const [domainId, setDomainId] = useState<string | null>(null);
-
-  useEffect(() => {
-    const id = searchParams?.get("id");
-    if (id) {
-      setDomainId(id);
-    }
-  }, [searchParams]);
+  const router = useRouter();
+  const domainId = typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("id") : null;
 
   interface DomainData {
     id: string;
@@ -140,7 +133,7 @@ export default function DomainViewPage() {
               </div>
               <div>
                 <span className="font-semibold">Cloudflare:</span>{" "}
-                {domain.domainCloudflare}
+                {(domain.domainCloudflare ?? "") || "-"}
               </div>
             </div>
           </div>
@@ -155,12 +148,12 @@ export default function DomainViewPage() {
               <div>
                 <label className="font-semibold">Redirect URL : </label>
                 <Link
-                  href={domain.domainRedirect || "#"}
+                  href={typeof domain.domainRedirect === "string" && domain.domainRedirect.length > 0 ? domain.domainRedirect : "#"}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-500 hover:underline font-bold"
                 >
-                  {domain.domainRedirect || "-"}
+                  {(domain.domainRedirect ?? "") || "-"}
                 </Link>
               </div>
             </div>
