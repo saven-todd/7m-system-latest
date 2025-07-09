@@ -1,13 +1,14 @@
-"use client"
+// app/test/page.tsx
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/src/lib/auth";
+import { redirect } from "next/navigation";
 
-import React from 'react'
+export default async function TestPage() {
+  const session = await getServerSession(authOptions);
 
-const page = () => {
-  return (
-    <div>
-      test
-    </div>
-  )
+  if (!session) {
+    redirect("/login");
+  }
+
+  return <pre>{JSON.stringify(session, null, 2)}</pre>;
 }
-
-export default page

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@mui/material";
+import { signOut } from "next-auth/react";
 
 export default function NavbarHorizon() {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,7 +23,7 @@ export default function NavbarHorizon() {
   }, []);
 
   return (
-    <nav className="w-full bg-white shadow px-4 py-2 flex justify-between items-center rounded-b-md">
+    <nav className="w-full bg-white shadow px-4 py-2 mt-2 flex justify-between items-center rounded-b-md">
       {/* Logo */}
       <div className="font-bold text-xl text-gray-800">
         <Link href="/">7M System</Link>
@@ -58,14 +59,12 @@ export default function NavbarHorizon() {
               Settings
             </Link>
             <hr className="my-2 border-gray-200 mx-auto w-11/12" />
-            <form action="/api/auth/signout" method="post">
-              <button
-                type="submit"
-                className="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-500"
-              >
-                Logout
-              </button>
-            </form>
+            <button
+              onClick={() => signOut({ callbackUrl: "/login" })}
+              className="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-500"
+            >
+              Logout
+            </button>
           </div>
         )}
       </div>

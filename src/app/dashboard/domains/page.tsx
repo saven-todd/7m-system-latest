@@ -290,7 +290,10 @@ export default function DomainsPage() {
         <Box mb={2}></Box>
         {loading ? (
           <Box>
-            <Skeleton variant="rounded" width="100%" height={200} />
+            {/* <Skeleton variant="rounded" width="100%" height={200} /> */}
+            <div className="p-6 flex items-center justify-center">
+              <div className="animate-spin text-blue-500 w-8 h-8 border-4 border-blue-200 border-t-blue-500 rounded-full"></div>
+            </div>
           </Box>
         ) : (
           <DataGrid

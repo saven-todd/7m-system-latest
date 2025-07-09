@@ -1,33 +1,29 @@
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-import { authOptions } from "@/src/lib/auth";
-import type { ReactNode } from "react";
+import React from "react";
+import { Metadata } from "next";
+import AuthGuard from "@/src/components/AuthGuard";
 import VerticalNavBar from "@/src/components/dashboard/VerticalNavBar";
-import NavbarHorizen from '@/src/components/dashboard/NavbarHorizon';
+import NavbarHorizon from "@/src/components/dashboard/NavbarHorizon";
 
-type Props = {
-  children: ReactNode;
+export const metadata: Metadata = {
+  title: "Dashboard | 7M System",
+  description: "Admin dashboard for managing domains and staff",
 };
 
-export default async function AdminLayout({ children }: Props) {
-  const session = await getServerSession(authOptions);
-
-  // ถ้าไม่มี session หรือ role ไม่ใช่ admin → redirect
-  if (!session || session.user?.role !== "admin") {
-    redirect("/login");
-  }
-
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <div className="flex min-h-screen bg-[#f5f5fa] te">
-      {/* Sidebar */}
-      <VerticalNavBar />
+    <AuthGuard>
+      <div className="flex min-h-screen">
+        <VerticalNavBar />
 
-      {/* Content */}
-      <main className="flex-1 p-6 overflow-y-auto text-gray-800">
-        <NavbarHorizen />
-        {/* Main content area */}
-        {children}
-      </main>
-    </div>
-  )
+        <main className="flex-1 p-4 bg-gray-50 text-gray-800">
+          <NavbarHorizon />
+          {children}
+        </main>
+      </div>
+    </AuthGuard>
+  );
 }

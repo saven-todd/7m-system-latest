@@ -1,7 +1,7 @@
-// app/login/page.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
@@ -15,30 +15,46 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [redirectUrl, setRedirectUrl] = useState<string | null>(null);
+
+  const { data: session, status } = useSession();
+
+  useEffect(() => {
+    console.log("🔐 useSession:", session);
+    console.log("📦 Status:", status);
+  }, [session, status]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
-    console.log("🟡 Signin attempt:", { email, password });
-
     const res = await signIn("credentials", {
       redirect: false,
       email,
       password,
-      callbackUrl: "/dashboard", // ✅ เส้นทางหลังเข้าสู่ระบบ
+      callbackUrl: "/dashboard",
     });
 
-    console.log("🟢 signIn result:", res);
+    console.log("🔐 signIn response:", res);
 
-    if (res?.error) {
+    if (res?.ok && res.url) {
+      const url = new URL(res.url, window.location.origin); // ใช้ origin ป้องกัน error
+      console.log("✅ Redirecting to:", url.pathname);
+      setRedirectUrl(url.pathname);
+    } else {
+      console.error("❌ Login failed:", res);
       setError("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
       setLoading(false);
-    } else {
-      router.push(res?.url || "/dashboard/admin");
     }
   };
+
+  useEffect(() => {
+    if (redirectUrl) {
+      console.log("🚀 Performing redirect:", redirectUrl);
+      router.push(redirectUrl);
+    }
+  }, [redirectUrl, router]);
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
@@ -53,23 +69,23 @@ export default function LoginPage() {
         {error && <p className="text-red-500 mb-2">{error}</p>}
 
         <TextField
-          id="email-input"
           label="Email"
           type="email"
+          value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="w-full mb-4"
           required
-          autoComplete="username" // ใช้ username แทน
+          autoComplete="username"
         />
 
         <TextField
-          id="password-input"
           label="Password"
           type="password"
+          value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="w-full mb-4"
           required
-          autoComplete="new-password" // ใช้ new-password แทน
+          autoComplete="current-password"
         />
 
         <Button

@@ -89,7 +89,7 @@ export default function EditDomainModal({
   useEffect(() => {
     if (domainData) {
       setFormData({
-        url: domainData.URL || "",
+        url: domainData.url || "",
         domainType: domainData.domainType || "",
         domainTeam: domainData.domainTeam || "",
         domainHost: domainData.domainHost || "",
@@ -124,8 +124,6 @@ export default function EditDomainModal({
     }
   }
 
-  console.log("Domain Data:", domainData);
-
   return (
     <Dialog
       open={open}
@@ -144,7 +142,6 @@ export default function EditDomainModal({
           name="url"
           label="URL"
           sx={{ pt: 1 }}
-          defaultValue={domainData?.url || ""}
           value={formData.url}
           onChange={(e) => setFormData({ ...formData, url: e.target.value })}
           required

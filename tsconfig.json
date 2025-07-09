@@ -25,6 +25,7 @@
         "name": "next"
       }
     ],
+    "types": ["node", "react", "react-dom", "next", "next-auth", "@mui/material"] // Add any additional types you need here
     
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts","src"],
