@@ -17,7 +17,7 @@ import {
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createDomain } from "./actions";
+import { createDomain } from "@/src/app/server/domains/createDomain";
 
 const domainTypes = [
   { key: "moneysite", label: "Money Site" },
@@ -48,7 +48,7 @@ const hosts = [
 
 export default function AddDomainPage() {
   const [useWp, setUseWp] = useState(false);
-  const [publishWp, setPublish] = useState(false);
+  const [publishWp, setPublish] = useState("");
   const router = useRouter();
 
   async function handleSubmit(formData: FormData) {
@@ -56,7 +56,6 @@ export default function AddDomainPage() {
 
     if (result?.success) {
       localStorage.setItem("successAddDomain", "1");
-      alert("เพิ่ม Domain สำเร็จ");
       router.push("/dashboard/domains");
       console.log("data insert : " + result)
     } else {
@@ -158,16 +157,18 @@ export default function AddDomainPage() {
                   fullWidth
                 />
 
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={publishWp}
-                      name="domainStatus"
-                      onChange={(e) => setPublish(e.target.checked)}
-                    />
-                  }
-                  label="เผยแพร่ WP แล้ว"
-                />
+                <TextField
+                  name="domainStatus"
+                  label="สถานะเผยแพร่"
+                  select
+                  value={publishWp}
+                  onChange={(e) => setPublish(e.target.value)}
+                  fullWidth
+                >
+                  <MenuItem value="publish">เผยแพร่</MenuItem>
+                  <MenuItem value="draft">ไม่เผยแพร่</MenuItem>
+                  <MenuItem value="redirect">Redirect 301</MenuItem>
+                </TextField>
 
                 <FormControlLabel
                   control={

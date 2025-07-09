@@ -14,10 +14,27 @@ import {
 import { useState, useEffect } from "react";
 import { updateDomain } from "@/src/app/server/domains/updateDomain";
 
+import Divider from "@mui/material/Divider";
+
+interface DomainData {
+  id: string | number;
+  URL?: string;
+  url?: string;
+  domainType?: string;
+  domainTeam?: string;
+  domainHost?: string;
+  domainProvider?: string;
+  domainCloudflare?: string;
+  domainStatus?: string;
+  wpUser?: string;
+  wpPassword?: string;
+  redirectUrl?: string;
+}
+
 interface EditDomainModalProps {
   open: boolean;
   onClose: () => void;
-  domainData: any;
+  domainData: DomainData;
   onRefresh: () => void;
 }
 
@@ -54,9 +71,6 @@ export default function EditDomainModal({
   domainData,
   onRefresh,
 }: EditDomainModalProps) {
-
-console.log("ข้อมูลส่งมา :\n" + JSON.stringify(domainData, null, 2));
-
   const [formData, setFormData] = useState({
     url: "",
     domainType: "",
@@ -64,14 +78,15 @@ console.log("ข้อมูลส่งมา :\n" + JSON.stringify(domainData,
     domainHost: "",
     domainProvider: "",
     domainCloudflare: "",
-    domainStatus: false,
+    domainStatus: "",
     wpUser: "",
     wpPassword: "",
   });
 
-  useEffect(() => {
-    
+  const [redirectUrl, setRedirectUrl] = useState("");
+  const [showWpFields, setShowWpFields] = useState(false);
 
+  useEffect(() => {
     if (domainData) {
       setFormData({
         url: domainData.URL || "",
@@ -80,17 +95,27 @@ console.log("ข้อมูลส่งมา :\n" + JSON.stringify(domainData,
         domainHost: domainData.domainHost || "",
         domainProvider: domainData.domainProvider || "",
         domainCloudflare: domainData.domainCloudflare || "",
-        domainStatus: domainData.domainStatus || false,
+        domainStatus: domainData.domainStatus || "",
         wpUser: domainData.wpUser || "",
         wpPassword: "",
       });
+      setRedirectUrl(domainData.redirectUrl || "");
     }
   }, [domainData]);
 
   async function handleSubmit() {
     const fd = new FormData();
-    Object.entries(formData).forEach(([k, v]) => fd.append(k, v.toString()));
-    const result = await updateDomain(domainData.id, fd);
+    const finalData = {
+      ...formData,
+      wpUser: showWpFields ? formData.wpUser : domainData.wpUser || "",
+      wpPassword: showWpFields ? formData.wpPassword : "",
+    };
+
+    Object.entries(finalData).forEach(([k, v]) => {
+      fd.append(k, v.toString());
+    });
+    fd.append("redirectUrl", redirectUrl);
+    const result = await updateDomain(domainData.id.toString(), fd);
     if (result.success) {
       onRefresh();
       onClose();
@@ -98,6 +123,8 @@ console.log("ข้อมูลส่งมา :\n" + JSON.stringify(domainData,
       alert(result.error);
     }
   }
+
+  console.log("Domain Data:", domainData);
 
   return (
     <Dialog
@@ -107,11 +134,16 @@ console.log("ข้อมูลส่งมา :\n" + JSON.stringify(domainData,
       maxWidth="md"
       className="rounded-b-lg"
     >
-      <DialogTitle>แก้ไข Domain</DialogTitle>
-      <DialogContent sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+      <DialogTitle sx={{ fontSize: 34, fontWeight: 'bold' }}>แก้ไข Domain</DialogTitle>
+
+      <DialogContent
+        sx={{ display: "flex", flexDirection: "column", gap: 3, padding: 2 }}
+      >
+        <Divider variant="middle" sx={{ pt: 1 }} />
         <TextField
           name="url"
           label="URL"
+          sx={{ pt: 1 }}
           defaultValue={domainData?.url || ""}
           value={formData.url}
           onChange={(e) => setFormData({ ...formData, url: e.target.value })}
@@ -198,33 +230,58 @@ console.log("ข้อมูลส่งมา :\n" + JSON.stringify(domainData,
             setFormData({ ...formData, domainCloudflare: e.target.value })
           }
         />
+        <TextField
+          name="domainStatus"
+          label="สถานะเผยแพร่"
+          select
+          value={formData.domainStatus}
+          onChange={(e) =>
+            setFormData({ ...formData, domainStatus: e.target.value })
+          }
+        >
+          <MenuItem value="publish">เผยแพร่</MenuItem>
+          <MenuItem value="draft">ไม่เผยแพร่</MenuItem>
+          <MenuItem value="redirect">Redirect 301</MenuItem>
+        </TextField>
+        {formData.domainStatus === "redirect" && (
+          <TextField
+            name="redirectUrl"
+            label="URL สำหรับ Redirect 301"
+            value={redirectUrl}
+            onChange={(e) => setRedirectUrl(e.target.value)}
+            fullWidth
+          />
+        )}
         <FormControlLabel
           control={
             <Checkbox
-              name="domainStatus"
-              checked={formData.domainStatus}
-              onChange={(e) =>
-                setFormData({ ...formData, domainStatus: e.target.checked })
-              }
+              checked={showWpFields}
+              onChange={(e) => setShowWpFields(e.target.checked)}
             />
           }
-          label="สถานะ เผยแพร่"
+          label="แก้ไขข้อมูล WordPress"
         />
-        <TextField
-          name="wpUser"
-          label="WordPress User"
-          value={formData.wpUser}
-          onChange={(e) => setFormData({ ...formData, wpUser: e.target.value })}
-        />
-        <TextField
-          name="wpPassword"
-          label="WordPress Password"
-          type="password"
-          value={formData.wpPassword}
-          onChange={(e) =>
-            setFormData({ ...formData, wpPassword: e.target.value })
-          }
-        />
+        {showWpFields && (
+          <>
+            <TextField
+              name="wpUser"
+              label="WordPress User"
+              value={formData.wpUser}
+              onChange={(e) =>
+                setFormData({ ...formData, wpUser: e.target.value })
+              }
+            />
+            <TextField
+              name="wpPassword"
+              label="WordPress Password"
+              type="password"
+              value={formData.wpPassword}
+              onChange={(e) =>
+                setFormData({ ...formData, wpPassword: e.target.value })
+              }
+            />
+          </>
+        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>ยกเลิก</Button>

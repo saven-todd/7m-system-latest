@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { authOptions } from "@/src/lib/auth";
 import type { ReactNode } from "react";
 import VerticalNavBar from "@/src/components/dashboard/VerticalNavBar";
+import NavbarHorizen from '@/src/components/dashboard/NavbarHorizon';
 
 type Props = {
   children: ReactNode;
@@ -10,9 +11,6 @@ type Props = {
 
 export default async function AdminLayout({ children }: Props) {
   const session = await getServerSession(authOptions);
-
-  // DEBUG
-  console.log("💥 [AdminLayout] session:", session);
 
   // ถ้าไม่มี session หรือ role ไม่ใช่ admin → redirect
   if (!session || session.user?.role !== "admin") {
@@ -26,6 +24,8 @@ export default async function AdminLayout({ children }: Props) {
 
       {/* Content */}
       <main className="flex-1 p-6 overflow-y-auto text-gray-800">
+        <NavbarHorizen />
+        {/* Main content area */}
         {children}
       </main>
     </div>

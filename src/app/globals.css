@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap');
+/* File: src/app/globals.css */
 @import "tailwindcss";
 @tailwind base;
 @tailwind components;
@@ -29,3 +29,4 @@ body {
   color: var(--foreground);
   font-family: 'Prompt', sans-serif;
 }
+

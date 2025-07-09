@@ -18,23 +18,64 @@ import Link from "next/link";
 import { getDomains } from "@/src/app/server/domains/getDomains";
 
 import EditDomainModal from "./EditDomainModal";
+import DeleteDomainModal from "./components/deleteModal";
 
 // SnackbarContent Alert
 import { SnackbarCloseReason } from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 
+//icons
+import RotateLeftIcon from "@mui/icons-material/RotateLeft";
+
+// Skeleton
+import Skeleton from "@mui/material/Skeleton";
+
+interface DomainResponse {
+  id: string;
+  url: string;
+  domainType: string;
+  domainTeam: string;
+  domainStatus: string | null;
+  domainRedirect: string | null;
+  domainHost: string;
+  domainCloudflare: string | null;
+  domainProvider: string;
+  wpDetail: {
+    wpUser: string;
+    wpPassword: string;
+  } | null;
+}
+
+interface DomainRow {
+  id: string;
+  URL: string;
+  domainType: string;
+  domainTeam: string;
+  domainStatus: string;
+  domainRedirect: string;
+  domainHost: string;
+  domainCloudflare: string;
+  domainProvider: string;
+  wpDetail: boolean;
+}
+
 export default function DomainsPage() {
-  const [rows, setRows] = useState<any[]>([]);
+  const [rows, setRows] = useState<DomainRow[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedRow, setSelectedRow] = useState<string | null>(null);
   const [toastOpen, setToastOpen] = useState(false);
 
   // update domain
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const [selectedDomain, setSelectedDomain] = useState<any>(null);
+  const [selectedDomain, setSelectedDomain] = useState<DomainRow | null>(null);
+  // delete domain
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   // Snackbar Set Close
   const [openSnack, setOpenSnack] = React.useState(false);
+
+  // loading state
+  const [loading, setLoading] = useState(true);
 
   const handleClose = (
     event?: React.SyntheticEvent | Event,
@@ -57,20 +98,22 @@ export default function DomainsPage() {
       localStorage.removeItem("editSuccess");
     }
 
-    getDomains().then((data) => {
+    getDomains().then((data: DomainResponse[]) => {
       setRows(
         data.map((d) => ({
           id: d.id,
           URL: d.url,
           domainType: d.domainType,
           domainTeam: d.domainTeam,
-          domainStatus: d.domainStatus,
+          domainStatus: d.domainStatus ?? "draft",
+          domainRedirect: d.domainRedirect ?? "",
           domainHost: d.domainHost,
-          domainCloudflare: d.domainCloudflare,
+          domainCloudflare: d.domainCloudflare ?? "",
           domainProvider: d.domainProvider,
           wpDetail: d.wpDetail?.wpUser ? true : false,
         }))
       );
+      setLoading(false);
     });
   }, []);
 
@@ -94,7 +137,9 @@ export default function DomainsPage() {
       flex: 1,
       renderCell: (params: GridRenderCellParams) => (
         <Box>
-          <strong>{params.value}</strong>
+          <Link href={`/dashboard/domains/view?id=${params.row.id}`}>
+            <strong>{params.value}</strong>
+          </Link>
           <Box fontSize={12} color="gray">
             Users can use the search bar, filters, and sorting.
           </Box>
@@ -117,8 +162,20 @@ export default function DomainsPage() {
       width: 120,
       renderCell: (params) => (
         <Chip
-          label={params.value == true ? "Published" : "Draft"}
-          color={params.value == true ? "success" : "default"}
+          label={
+            params.value === "publish"
+              ? "Published"
+              : params.value === "redirect"
+              ? "Redirect"
+              : "Draft"
+          }
+          color={
+            params.value === "publish"
+              ? "success"
+              : params.value === "redirect"
+              ? "warning"
+              : "default"
+          }
           size="small"
         />
       ),
@@ -163,12 +220,6 @@ export default function DomainsPage() {
     },
   ];
 
-  const action = (
-    <Button color="secondary" size="small">
-      ปิด
-    </Button>
-  );
-
   return (
     <>
       <Box p={2}>
@@ -183,6 +234,7 @@ export default function DomainsPage() {
             <Button
               variant="outlined"
               onClick={async () => {
+                setLoading(true);
                 const data = await getDomains();
                 setRows(
                   data.map((d) => ({
@@ -190,15 +242,18 @@ export default function DomainsPage() {
                     URL: d.url,
                     domainType: d.domainType,
                     domainTeam: d.domainTeam,
-                    domainStatus: d.domainStatus,
+                    domainStatus: d.domainStatus ?? "draft",
+                    domainRedirect: d.domainRedirect ?? "",
                     domainHost: d.domainHost,
-                    domainCloudflare: d.domainCloudflare,
+                    domainCloudflare: d.domainCloudflare ?? "",
+                    domainProvider: d.domainProvider,
                     wpDetail: d.wpDetail?.wpUser ? true : false,
                   }))
                 );
+                setLoading(false);
               }}
             >
-              Reload
+              <RotateLeftIcon />
             </Button>
             <Link
               href="/dashboard/domains/add"
@@ -208,13 +263,19 @@ export default function DomainsPage() {
             </Link>
           </Box>
         </Box>
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          disableRowSelectionOnClick
-          checkboxSelection
-          autoHeight
-        />
+        {loading ? (
+          <Box>
+            <Skeleton variant="rounded" width="100%" height={200} />
+          </Box>
+        ) : (
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            disableRowSelectionOnClick
+            checkboxSelection
+            autoHeight
+          />
+        )}
         <Menu
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
@@ -222,17 +283,31 @@ export default function DomainsPage() {
         >
           <MenuItem
             onClick={() => {
-              const selected = rows.find((r) => r.id === selectedRow);
-              setSelectedDomain(selected);
-              setEditModalOpen(true);
-
-              console.log("data : ", JSON.stringify(selected, null, 2));
+              if (selectedRow) {
+                const selected = rows.find((r) => r.id === selectedRow);
+                if (selected) {
+                  setSelectedDomain(selected);
+                  setEditModalOpen(true);
+                }
+              }
             }}
           >
             แก้ไข
           </MenuItem>
           <MenuItem>Publish</MenuItem>
-          <MenuItem>ลบ</MenuItem>
+          <MenuItem
+            onClick={() => {
+              if (selectedRow) {
+                const selected = rows.find((r) => r.id === selectedRow);
+                if (selected) {
+                  setSelectedDomain(selected);
+                  setDeleteModalOpen(true);
+                }
+              }
+            }}
+          >
+            ลบ
+          </MenuItem>
         </Menu>
         <Snackbar
           open={toastOpen}
@@ -241,12 +316,40 @@ export default function DomainsPage() {
           message="เพิ่ม Domain สำเร็จ!"
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         />
-        <EditDomainModal
-          open={editModalOpen}
-          onClose={() => setEditModalOpen(false)}
-          domainData={selectedDomain}
-          onRefresh={() => window.location.reload()} // หรือ reload table function
-        />
+        {selectedDomain && (
+          <EditDomainModal
+            open={editModalOpen}
+            onClose={() => setEditModalOpen(false)}
+            domainData={selectedDomain}
+            onRefresh={() => window.location.reload()} // หรือ reload table function
+          />
+        )}
+        {selectedDomain && (
+          <DeleteDomainModal
+            open={deleteModalOpen}
+            onClose={() => setDeleteModalOpen(false)}
+            domainData={selectedDomain}
+            onRefresh={async () => {
+              setLoading(true);
+              const data = await getDomains();
+              setRows(
+                data.map((d) => ({
+                  id: d.id,
+                  URL: d.url,
+                  domainType: d.domainType,
+                  domainTeam: d.domainTeam,
+                  domainStatus: d.domainStatus ?? "draft",
+                  domainRedirect: d.domainRedirect ?? "",
+                  domainHost: d.domainHost,
+                  domainCloudflare: d.domainCloudflare ?? "",
+                  domainProvider: d.domainProvider,
+                  wpDetail: d.wpDetail?.wpUser ? true : false,
+                }))
+              );
+              setLoading(false);
+            }}
+          />
+        )}
       </Box>
       <Snackbar open={openSnack} autoHideDuration={5000} onClose={handleClose}>
         <Alert

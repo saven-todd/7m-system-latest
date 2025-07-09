@@ -35,7 +35,8 @@ model Domain {
   domainHost       String
   domainProvider   String
   domainCloudflare String?
-  domainStatus           Boolean   @default(false)
+  domainStatus      String @default("draft")
+  domainRedirect     String?
 
   createdAt        DateTime  @default(now())
 
@@ -43,10 +44,10 @@ model Domain {
 }
 
 model WpDetail {
-  id         String @id @default(uuid())
-  domainUrl  String @unique
+  id         String  @id @default(uuid())
+  domainUrl  String? @unique
   wpUser     String
   wpPassword String
 
-  domain     Domain @relation("DomainToWpDetail", fields: [domainUrl], references: [url])
+  domain     Domain? @relation("DomainToWpDetail", fields: [domainUrl], references: [url], onDelete: SetNull)
 }

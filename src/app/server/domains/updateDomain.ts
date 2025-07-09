@@ -2,6 +2,8 @@
 
 import { prisma } from "@/src/lib/db";
 import bcrypt from "bcrypt";
+import { encrypt } from "@/src/lib/encryption";
+
 
 export async function updateDomain(id: string, formData: FormData) {
   const url = formData.get("url") as string;
@@ -10,7 +12,10 @@ export async function updateDomain(id: string, formData: FormData) {
   const domainHost = formData.get("domainHost") as string;
   const domainProvider = formData.get("domainProvider") as string;
   const domainCloudflare = formData.get("domainCloudflare") as string;
-  const domainStatus = formData.get("domainStatus") === "on" ? true : false;
+  const domainStatus = String(formData.get("domainStatus") || "");
+  const domainRedirect = formData.get("redirectUrl") as string;
+
+  // wpDetail
   const wpUser = (formData.get("wpUser") as string) || "";
   const wpPassword = (formData.get("wpPassword") as string) || "";
 
@@ -23,9 +28,7 @@ export async function updateDomain(id: string, formData: FormData) {
   });
 
   try {
-    const hashedPassword = wpPassword
-      ? await bcrypt.hash(wpPassword, 10)
-      : undefined;
+    const plainPassword = wpPassword || undefined;
 
     await prisma.domain.update({
       where: { id },
@@ -37,18 +40,21 @@ export async function updateDomain(id: string, formData: FormData) {
         domainProvider,
         domainCloudflare: domainCloudflare || null,
         domainStatus,
-        wpDetail: {
-          upsert: {
-            update: {
-              wpUser,
-              ...(hashedPassword && { wpPassword: hashedPassword }),
-            },
-            create: {
-              wpUser,
-              wpPassword: hashedPassword || "",
-            },
-          },
-        },
+        domainRedirect,
+        wpDetail: wpUser || wpPassword
+          ? {
+              upsert: {
+                update: {
+                  wpUser,
+                  ...(plainPassword && { wpPassword: plainPassword }),
+                },
+                create: {
+                  wpUser,
+                  wpPassword: plainPassword || "",
+                },
+              },
+            }
+          : undefined,
       },
     });
 
