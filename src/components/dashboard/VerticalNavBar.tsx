@@ -44,7 +44,8 @@ export default function VerticalNavBar({
           <Image
             src="/assets/images/logo.png"
             alt="7M System Admin Logo"
-            className="h-12 w-auto"
+            width={150}
+            height={50}
           />
         </Link>
       </header>

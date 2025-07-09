@@ -10,6 +10,7 @@ import {
   MenuItem,
   Snackbar,
   Button,
+  TextField,
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useEffect, useState } from "react";
@@ -76,6 +77,11 @@ export default function DomainsPage() {
 
   // loading state
   const [loading, setLoading] = useState(true);
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const filteredRows = rows.filter((row) =>
+    row.URL.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleClose = (
     event?: React.SyntheticEvent | Event,
@@ -228,11 +234,23 @@ export default function DomainsPage() {
           justifyContent="space-between"
           alignItems="center"
           mb={2}
+          gap={1}
         >
           <h2 className="text-xl font-bold">จัดการ Domains</h2>
-          <Box display="flex" gap={1}>
+
+          <Box display="flex" width={900} gap={1} justifyContent="flex-end">
+            <TextField
+              label="ค้นหา Domain"
+              variant="outlined"
+              sx={{ width: 300, backgroundColor: "#fff" }}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="ค้นหา URL หรือชื่อ Domain"
+            />
             <Button
               variant="outlined"
+              sx={{ width: 60 }}
+              disabled={loading}
               onClick={async () => {
                 setLoading(true);
                 const data = await getDomains();
@@ -258,18 +276,25 @@ export default function DomainsPage() {
             <Link
               href="/dashboard/domains/add"
               className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
+              style={{
+                width: 150,
+                alignItems: "center",
+                justifyContent: "center",
+                display: "flex",
+              }}
             >
               เพิ่ม Domain
             </Link>
           </Box>
         </Box>
+        <Box mb={2}></Box>
         {loading ? (
           <Box>
             <Skeleton variant="rounded" width="100%" height={200} />
           </Box>
         ) : (
           <DataGrid
-            rows={rows}
+            rows={filteredRows}
             columns={columns}
             disableRowSelectionOnClick
             checkboxSelection
