@@ -1,9 +1,6 @@
 "use server";
 
 import { prisma } from "@/src/lib/db";
-import bcrypt from "bcrypt";
-import { encrypt } from "@/src/lib/encryption";
-
 
 export async function updateDomain(id: string, formData: FormData) {
   const url = formData.get("url") as string;
@@ -41,20 +38,21 @@ export async function updateDomain(id: string, formData: FormData) {
         domainCloudflare: domainCloudflare || null,
         domainStatus,
         domainRedirect,
-        wpDetail: wpUser || wpPassword
-          ? {
-              upsert: {
-                update: {
-                  wpUser,
-                  ...(plainPassword && { wpPassword: plainPassword }),
+        wpDetail:
+          wpUser || wpPassword
+            ? {
+                upsert: {
+                  update: {
+                    wpUser,
+                    ...(plainPassword && { wpPassword: plainPassword }),
+                  },
+                  create: {
+                    wpUser,
+                    wpPassword: plainPassword || "",
+                  },
                 },
-                create: {
-                  wpUser,
-                  wpPassword: plainPassword || "",
-                },
-              },
-            }
-          : undefined,
+              }
+            : undefined,
       },
     });
 

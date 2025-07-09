@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -40,7 +41,7 @@ export default function VerticalNavBar({
     <aside className="w-64 bg-white shadow px-4 py-6">
       <header className="mb-6 flex justify-center">
         <Link href="/dashboard/admin">
-          <img
+          <Image
             src="/assets/images/logo.png"
             alt="7M System Admin Logo"
             className="h-12 w-auto"

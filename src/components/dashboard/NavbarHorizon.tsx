@@ -24,7 +24,7 @@ export default function NavbarHorizon() {
   return (
     <nav className="w-full bg-white shadow px-4 py-2 flex justify-between items-center rounded-b-md">
       {/* Logo */}
-      <div className="font-bold text-xl text-blue-600">
+      <div className="font-bold text-xl text-gray-800">
         <Link href="/">7M System</Link>
       </div>
 

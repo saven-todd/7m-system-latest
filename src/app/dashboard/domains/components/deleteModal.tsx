@@ -34,7 +34,10 @@ const style = {
 interface DeleteDomainModalProps {
   open: boolean;
   onClose: () => void;
-  domainData: any;
+  domainData: {
+    id: string;
+    URL: string;
+  };
   onRefresh: () => void;
 }
 
@@ -74,7 +77,7 @@ export default function DeleteDomainModal({
         return;
       }
 
-      let res: any = {};
+      let res: { success?: boolean } = {};
       try {
         res = await response.json();
       } catch (err) {
