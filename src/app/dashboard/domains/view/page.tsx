@@ -6,11 +6,13 @@ import Link from "next/link";
 import CopyAllIcon from "@mui/icons-material/CopyAll";
 import Button from "@mui/material/Button";
 
-
 import EditDomainModal from "../EditDomainModal";
 
 export default function DomainViewPage() {
-  const domainId = typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("id") : null;
+  const domainId =
+    typeof window !== "undefined"
+      ? new URLSearchParams(window.location.search).get("id")
+      : null;
 
   interface DomainData {
     id: string;
@@ -93,12 +95,12 @@ export default function DomainViewPage() {
         <div className="flex flex-col text-center mb-6 items-center">
           <span className="text-xl font-bold mb-1">Domain Detail</span>
           <Link
-            href={domain.url}
+            href={domain.url || "#"}
             target="_blank"
             rel="noopener noreferrer"
             className="w-fit text-gray-800 font-black text-4xl"
           >
-            {domain.url}
+            {domain.url || "ไม่พบ URL"}
           </Link>
           <div className="text-gray-400 text-sm">
             สร้างเมื่อ: {new Date(domain.createdAt).toLocaleDateString()}
@@ -146,7 +148,12 @@ export default function DomainViewPage() {
               <div>
                 <label className="font-semibold">Redirect URL : </label>
                 <Link
-                  href={typeof domain.domainRedirect === "string" && domain.domainRedirect.length > 0 ? domain.domainRedirect : "#"}
+                  href={
+                    typeof domain.domainRedirect === "string" &&
+                    domain.domainRedirect.length > 0
+                      ? domain.domainRedirect
+                      : "#"
+                  }
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-500 hover:underline font-bold"
