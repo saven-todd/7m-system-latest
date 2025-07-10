@@ -65,7 +65,7 @@ export default function DomainsPage() {
 
   // update domain
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const [selectedDomain, setSelectedDomain] = useState<DomainRow | null>(null);
+  const [selectedDomain, setSelectedDomain] = useState<DomainResponse | null>(null);
   // delete domain
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
@@ -222,6 +222,8 @@ export default function DomainsPage() {
       ),
     },
   ];
+
+  console.log("Rows:", rows);
 
   return (
     <>
