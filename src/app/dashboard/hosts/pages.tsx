@@ -1,4 +1,9 @@
+"use client";
 
+import React from "react";
+
+// This is the main page for the hosts management section
+// It can be used to display a list of hosts, add new hosts, etc.
 
 export default function HostsPage() {
   return (
