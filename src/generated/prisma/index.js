@@ -174,6 +174,10 @@ const config = {
         "fromEnvVar": null,
         "value": "darwin-arm64",
         "native": true
+      },
+      {
+        "fromEnvVar": null,
+        "value": "rhel-openssl-3.0.x"
       }
     ],
     "previewFeatures": [],
@@ -200,8 +204,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id            String    @id @default(cuid())\n  name          String?\n  email         String?   @unique\n  password      String?\n  emailVerified DateTime?\n  image         String?\n  role          String    @default(\"staff\")\n  sessions      Session[]\n}\n\nmodel Session {\n  id           String   @id @default(cuid())\n  sessionToken String   @unique\n  userId       String\n  expires      DateTime\n  user         User     @relation(fields: [userId], references: [id])\n}\n\nmodel Domain {\n  id               String  @id @default(uuid())\n  url              String  @unique\n  domainType       String\n  domainTeam       String\n  domainHost       String\n  domainProvider   String\n  domainCloudflare String?\n  domainStatus     String  @default(\"draft\")\n  domainRedirect   String?\n\n  createdAt DateTime @default(now())\n\n  wpDetail WpDetail? @relation(\"DomainToWpDetail\")\n}\n\nmodel WpDetail {\n  id         String  @id @default(uuid())\n  domainUrl  String? @unique\n  wpUser     String\n  wpPassword String\n\n  domain Domain? @relation(\"DomainToWpDetail\", fields: [domainUrl], references: [url], onDelete: SetNull)\n}\n",
-  "inlineSchemaHash": "539fb19e0e34c0264ae2641febec39d1136e04cdcdc22df13a1280301befeb9b",
+  "inlineSchema": "generator client {\n  provider      = \"prisma-client-js\"\n  binaryTargets = [\"native\", \"rhel-openssl-3.0.x\"]\n  output        = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id            String    @id @default(cuid())\n  name          String?\n  email         String?   @unique\n  password      String?\n  emailVerified DateTime?\n  image         String?\n  role          String    @default(\"staff\")\n  sessions      Session[]\n}\n\nmodel Session {\n  id           String   @id @default(cuid())\n  sessionToken String   @unique\n  userId       String\n  expires      DateTime\n  user         User     @relation(fields: [userId], references: [id])\n}\n\nmodel Domain {\n  id               String  @id @default(uuid())\n  url              String  @unique\n  domainType       String\n  domainTeam       String\n  domainHost       String\n  domainProvider   String\n  domainCloudflare String?\n  domainStatus     String  @default(\"draft\")\n  domainRedirect   String?\n\n  createdAt DateTime @default(now())\n\n  wpDetail WpDetail? @relation(\"DomainToWpDetail\")\n}\n\nmodel WpDetail {\n  id         String  @id @default(uuid())\n  domainUrl  String? @unique\n  wpUser     String\n  wpPassword String\n\n  domain Domain? @relation(\"DomainToWpDetail\", fields: [domainUrl], references: [url], onDelete: SetNull)\n}\n",
+  "inlineSchemaHash": "30ee8623ae4beaba2f052f402be2610a367c11684a54f154f8134dc4ed7914e6",
   "copyEngine": true
 }
 
@@ -242,6 +246,10 @@ Object.assign(exports, Prisma)
 // file annotations for bundling tools to include these files
 path.join(__dirname, "libquery_engine-darwin-arm64.dylib.node");
 path.join(process.cwd(), "src/generated/prisma/libquery_engine-darwin-arm64.dylib.node")
+
+// file annotations for bundling tools to include these files
+path.join(__dirname, "libquery_engine-rhel-openssl-3.0.x.so.node");
+path.join(process.cwd(), "src/generated/prisma/libquery_engine-rhel-openssl-3.0.x.so.node")
 // file annotations for bundling tools to include these files
 path.join(__dirname, "schema.prisma");
 path.join(process.cwd(), "src/generated/prisma/schema.prisma")

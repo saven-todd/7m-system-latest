@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 import CopyAllIcon from "@mui/icons-material/CopyAll";
@@ -11,7 +10,6 @@ import Button from "@mui/material/Button";
 import EditDomainModal from "../EditDomainModal";
 
 export default function DomainViewPage() {
-  const router = useRouter();
   const domainId = typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("id") : null;
 
   interface DomainData {

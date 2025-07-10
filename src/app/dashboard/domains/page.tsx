@@ -28,9 +28,6 @@ import Alert from "@mui/material/Alert";
 //icons
 import RotateLeftIcon from "@mui/icons-material/RotateLeft";
 
-// Skeleton
-import Skeleton from "@mui/material/Skeleton";
-
 interface DomainResponse {
   id: string;
   url: string;
