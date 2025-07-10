@@ -12,7 +12,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import { useState, useEffect } from "react";
-import { updateDomain } from "@/src/app/server/domains/updateDomain";
+import { updateDomain } from "@/app/server/domains/updateDomain";
 
 import Divider from "@mui/material/Divider";
 

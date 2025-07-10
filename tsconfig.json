@@ -14,9 +14,9 @@
     "jsx": "preserve",
     "incremental": true,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "paths": {
-      "@/*": ["./*"],
+      "@/*": ["*"],
       "@/assets" : [ "./public/assets"],
       "@mui/*": ["node_modules/@mui/*"]
     },

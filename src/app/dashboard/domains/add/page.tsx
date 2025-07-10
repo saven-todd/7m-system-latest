@@ -16,7 +16,7 @@ import {
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createDomain } from "@/src/app/server/domains/createDomain";
+import { createDomain } from "@/app/server/domains/createDomain";
 
 const domainTypes = [
   { key: "moneysite", label: "Money Site" },

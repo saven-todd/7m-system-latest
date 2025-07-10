@@ -1,8 +1,8 @@
 import React from "react";
 import { Metadata } from "next";
-import AuthGuard from "@/src/components/AuthGuard";
-import VerticalNavBar from "@/src/components/dashboard/VerticalNavBar";
-import NavbarHorizon from "@/src/components/dashboard/NavbarHorizon";
+import AuthGuard from "@/components/AuthGuard";
+import VerticalNavBar from "@/components/dashboard/VerticalNavBar";
+import NavbarHorizon from "@/components/dashboard/NavbarHorizon";
 
 export const metadata: Metadata = {
   title: "Dashboard | 7M System",

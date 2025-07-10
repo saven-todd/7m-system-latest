@@ -16,7 +16,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useEffect, useState } from "react";
 
 import Link from "next/link";
-import { getDomains } from "@/src/app/server/domains/getDomains";
+import { getDomains } from "@/app/server/domains/getDomains";
 
 import EditDomainModal from "./EditDomainModal";
 import DeleteDomainModal from "./components/deleteModal";

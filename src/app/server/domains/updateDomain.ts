@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/src/lib/db";
+import { prisma } from "@/lib/db";
 
 export async function updateDomain(id: string, formData: FormData) {
   const url = formData.get("url") as string;

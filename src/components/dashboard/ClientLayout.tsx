@@ -2,10 +2,10 @@
 
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { authOptions } from "@/src/lib/auth";
+import { authOptions } from "@/lib/auth";
 import type { ReactNode } from "react";
-import VerticalNavBar from "@/src/components/dashboard/VerticalNavBar";
-import NavbarHorizen from "@/src/components/dashboard/NavbarHorizon";
+import VerticalNavBar from "@/components/dashboard/VerticalNavBar";
+import NavbarHorizen from "@/components/dashboard/NavbarHorizon";
 
 type Props = {
   children: ReactNode;

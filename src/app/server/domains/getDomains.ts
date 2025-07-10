@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/src/lib/db";
+import { prisma } from "@/lib/db";
 
 export async function getDomains() {
   try {

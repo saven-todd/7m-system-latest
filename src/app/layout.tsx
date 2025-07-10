@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
 import { Prompt } from "next/font/google";
-import SessionProviderWrapper from "@/src/components/SessionProviderWrapper"; // เพิ่มบรรทัดนี้
+import SessionProviderWrapper from "@/components/SessionProviderWrapper"; // เพิ่มบรรทัดนี้
 
 const prompt = Prompt({
   subsets: ["thai", "latin"],

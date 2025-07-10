@@ -5,7 +5,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 
 // NavBar
-import NavbarHorizon from "@/src/components/dashboard/NavbarHorizon";
+import NavbarHorizon from "@/components/dashboard/NavbarHorizon";
 
 export default function AdminDashboardPage() {
   const today = new Date();

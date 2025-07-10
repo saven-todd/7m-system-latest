@@ -2,7 +2,7 @@
 
 "use server";
 
-import { prisma } from "@/src/lib/db";
+import { prisma } from "@/lib/db";
 
 type CreateDomainResult = {
   success: boolean;

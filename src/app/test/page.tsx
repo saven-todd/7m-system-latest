@@ -1,6 +1,6 @@
 // app/test/page.tsx
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/src/lib/auth";
+import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 export default async function TestPage() {

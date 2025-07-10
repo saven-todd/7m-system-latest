@@ -1,6 +1,6 @@
 // src/app/api/domains/route.ts
 import { NextResponse } from "next/server";
-import { prisma } from "@/src/lib/db";
+import { prisma } from "@/lib/db";
 
 export async function POST(req: Request) {
   const data = await req.json();
