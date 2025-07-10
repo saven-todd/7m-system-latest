@@ -1,14 +1,9 @@
 "use server";
 
 import { prisma } from "@/lib/db";
-import { Domain } from "@/generated/prisma/client";
 
-export async function getDomains(): Promise<Domain[] | []> {
+export async function getDomains() {
   try {
-    if (!prisma || !prisma.domain) {
-      throw new Error("Prisma client is not initialized or 'domain' model not found.");
-    }
-
     const domains = await prisma.domain.findMany({
       include: {
         wpDetail: true,
@@ -16,9 +11,9 @@ export async function getDomains(): Promise<Domain[] | []> {
     });
 
     return domains;
-  } catch (error: any) {
-    console.error("❌ getDomains error:", error?.message || error);
-    
+  } catch (error) {
+    console.error("❌ getDomains error:", (error as Error).message);
+
     // Fallback สำหรับ production: return [] แทน throw
     if (process.env.NODE_ENV === "production") {
       return [];

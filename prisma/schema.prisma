@@ -1,7 +1,7 @@
 generator client {
   provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
   output        = "../src/generated/prisma"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
@@ -16,7 +16,7 @@ model User {
   password      String?
   emailVerified DateTime?
   image         String?
-  role          String  @default("staff")
+  role          String    @default("staff")
   sessions      Session[]
 }
 
@@ -36,11 +36,9 @@ model Domain {
   domainHost       String
   domainProvider   String
   domainCloudflare String?
-  domainStatus      String @default("draft")
-  domainRedirect     String?
-
+  domainStatus     String    @default("draft")
+  domainRedirect   String?
   createdAt        DateTime  @default(now())
-
   wpDetail         WpDetail? @relation("DomainToWpDetail")
 }
 
@@ -49,6 +47,5 @@ model WpDetail {
   domainUrl  String? @unique
   wpUser     String
   wpPassword String
-
-  domain     Domain? @relation("DomainToWpDetail", fields: [domainUrl], references: [url], onDelete: SetNull)
+  domain     Domain? @relation("DomainToWpDetail", fields: [domainUrl], references: [url])
 }
