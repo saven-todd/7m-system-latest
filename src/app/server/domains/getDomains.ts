@@ -11,6 +11,7 @@ export async function getDomains() {
     });
 
     return domains;
+    
   } catch (error) {
     console.error("❌ getDomains error:", (error as Error).message);
 

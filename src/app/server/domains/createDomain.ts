@@ -20,6 +20,7 @@ export async function createDomain(formData: FormData): Promise<CreateDomainResu
   const wpUser = (formData.get("wpUser") as string) || "";
   const wpPassword = (formData.get("wpPassword") as string) || "";
 
+  console.log("Creating domain with data:",url)
   try {
     const hashedPassword = wpPassword;
 

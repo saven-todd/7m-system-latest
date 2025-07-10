@@ -56,10 +56,14 @@ export default function AddDomainPage() {
     if (result?.success) {
       localStorage.setItem("successAddDomain", "1");
       router.push("/dashboard/domains");
-      console.log("data insert : " + result)
+      console.log("data insert : " + result);
     } else {
+      const errorMessage =
+        result?.error?.includes("Unique constraint failed on the fields: (`url`)") 
+          ? "URL นี้มีอยู่ในระบบแล้ว กรุณาใช้ URL อื่น"
+          : `เกิดข้อผิดพลาด: ${result?.error ?? "ไม่ทราบสาเหตุ"}`;
+      alert(errorMessage);
       console.error(result?.error);
-      alert(`เกิดข้อผิดพลาด: ${result?.error ?? "ไม่ทราบสาเหตุ"}`);
     }
   }
 
