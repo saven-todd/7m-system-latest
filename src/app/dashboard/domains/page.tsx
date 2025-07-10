@@ -101,9 +101,9 @@ export default function DomainsPage() {
       localStorage.removeItem("editSuccess");
     }
 
-    getDomains().then((data: DomainResponse[]) => {
+    getDomains().then((data) => {
       setRows(
-        data.map((d) => ({
+        data.map((d: any) => ({
           id: d.id,
           URL: d.url,
           domainType: d.domainType,
@@ -113,7 +113,7 @@ export default function DomainsPage() {
           domainHost: d.domainHost,
           domainCloudflare: d.domainCloudflare ?? "",
           domainProvider: d.domainProvider,
-          wpDetail: d.wpDetail?.wpUser ? true : false,
+          wpDetail: d.wpDetail && typeof d.wpDetail === "object" && "wpUser" in d.wpDetail && d.wpDetail.wpUser ? true : false,
         }))
       );
       setLoading(false);
@@ -252,7 +252,7 @@ export default function DomainsPage() {
                 setLoading(true);
                 const data = await getDomains();
                 setRows(
-                  data.map((d) => ({
+                  data.map((d: any) => ({
                     id: d.id,
                     URL: d.url,
                     domainType: d.domainType,
@@ -262,7 +262,7 @@ export default function DomainsPage() {
                     domainHost: d.domainHost,
                     domainCloudflare: d.domainCloudflare ?? "",
                     domainProvider: d.domainProvider,
-                    wpDetail: d.wpDetail?.wpUser ? true : false,
+                    wpDetail: d.wpDetail && typeof d.wpDetail === "object" && "wpUser" in d.wpDetail && d.wpDetail.wpUser ? true : false,
                   }))
                 );
                 setLoading(false);
@@ -358,7 +358,7 @@ export default function DomainsPage() {
               setLoading(true);
               const data = await getDomains();
               setRows(
-                data.map((d) => ({
+                data.map((d: any) => ({
                   id: d.id,
                   URL: d.url,
                   domainType: d.domainType,
@@ -368,7 +368,7 @@ export default function DomainsPage() {
                   domainHost: d.domainHost,
                   domainCloudflare: d.domainCloudflare ?? "",
                   domainProvider: d.domainProvider,
-                  wpDetail: d.wpDetail?.wpUser ? true : false,
+                  wpDetail: d.wpDetail && typeof d.wpDetail === "object" && "wpUser" in d.wpDetail && d.wpDetail.wpUser ? true : false,
                 }))
               );
               setLoading(false);
