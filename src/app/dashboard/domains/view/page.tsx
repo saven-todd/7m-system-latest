@@ -31,6 +31,8 @@ export default function DomainViewPage() {
     };
   }
 
+  console.log("Domain ID from URL:", domainId);
+
   const [domain, setDomain] = useState<DomainData | null>(null);
   const [domainError, setDomainError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
