@@ -8,11 +8,16 @@ import Button from "@mui/material/Button";
 
 import EditDomainModal from "../EditDomainModal";
 
+import { useSearchParams } from "next/navigation";
+
 export default function DomainViewPage() {
-  const domainId =
-    typeof window !== "undefined"
-      ? new URLSearchParams(window.location.search).get("id")
-      : null;
+  // const domainId =
+  //   typeof window !== "undefined"
+  //     ? new URLSearchParams(window.location.search).get("id")
+  //     : null;
+
+  const searchParams = useSearchParams() || new URLSearchParams();
+  const domainId = searchParams.get("id");
 
   interface DomainData {
     id: string;
