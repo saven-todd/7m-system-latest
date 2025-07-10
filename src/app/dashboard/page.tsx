@@ -14,7 +14,7 @@ export default function DashboardPage() {
     if (status === "unauthenticated") {
       router.replace("/login");
     }
-  }, [status]);
+  }, [status , router]);
 
   if (status === "loading") {
     return <div className="text-center mt-10">Loading...</div>;
