@@ -4,9 +4,6 @@ import Box from "@mui/material/Box";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 
-// NavBar
-import NavbarHorizon from "@/components/dashboard/NavbarHorizon";
-
 export default function AdminDashboardPage() {
   const today = new Date();
   const formattedDate = today.toLocaleDateString("th-TH", {
@@ -18,7 +15,6 @@ export default function AdminDashboardPage() {
 
   return (
     <>
-    <NavbarHorizon />
       <div className="space-y-6">
         {/* Congratulations Card */}
         <Box>
