@@ -31,6 +31,7 @@ import RotateLeftIcon from "@mui/icons-material/RotateLeft";
 interface DomainResponse {
   id: string;
   url: string;
+  URL: string;
   domainType: string;
   domainTeam: string;
   domainStatus: string | null;
@@ -313,7 +314,24 @@ export default function DomainsPage() {
               if (selectedRow) {
                 const selected = rows.find((r) => r.id === selectedRow);
                 if (selected) {
-                  setSelectedDomain(selected);
+                  setSelectedDomain({
+                    id: selected.id,
+                    url: selected.URL,
+                    URL: selected.URL,
+                    domainType: selected.domainType,
+                    domainTeam: selected.domainTeam,
+                    domainStatus: selected.domainStatus,
+                    domainRedirect: selected.domainRedirect,
+                    domainHost: selected.domainHost,
+                    domainCloudflare: selected.domainCloudflare,
+                    domainProvider: selected.domainProvider,
+                    wpDetail: selected.wpDetail
+                      ? {
+                          wpUser: "",
+                          wpPassword: "",
+                        }
+                      : null,
+                  });
                   setEditModalOpen(true);
                 }
               }
@@ -327,8 +345,25 @@ export default function DomainsPage() {
               if (selectedRow) {
                 const selected = rows.find((r) => r.id === selectedRow);
                 if (selected) {
-                  setSelectedDomain(selected);
-                  setDeleteModalOpen(true);
+                  setSelectedDomain({
+                    id: selected.id,
+                    url: selected.URL,
+                    URL: selected.URL,
+                    domainType: selected.domainType,
+                    domainTeam: selected.domainTeam,
+                    domainStatus: selected.domainStatus,
+                    domainRedirect: selected.domainRedirect,
+                    domainHost: selected.domainHost,
+                    domainCloudflare: selected.domainCloudflare,
+                    domainProvider: selected.domainProvider,
+                    wpDetail: selected.wpDetail
+                      ? {
+                          wpUser: "",
+                          wpPassword: "",
+                        }
+                      : null,
+                  });
+                  setEditModalOpen(true);
                 }
               }
             }}
@@ -347,7 +382,11 @@ export default function DomainsPage() {
           <EditDomainModal
             open={editModalOpen}
             onClose={() => setEditModalOpen(false)}
-            domainData={selectedDomain}
+            domainData={{
+              ...selectedDomain,
+              domainCloudflare: selectedDomain.domainCloudflare ?? undefined,
+              domainStatus: selectedDomain.domainStatus ?? undefined,
+            }}
             onRefresh={() => window.location.reload()} // หรือ reload table function
           />
         )}
