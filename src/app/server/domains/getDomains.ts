@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/db";
-import { Domain } from "@prisma/client";
+import { Domain } from "@/generated/prisma/client";
 
 export async function getDomains(): Promise<Domain[] | []> {
   try {
