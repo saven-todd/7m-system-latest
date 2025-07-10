@@ -103,6 +103,7 @@ export default function DomainsPage() {
     }
 
     getDomains().then((data) => {
+      console.log("Fetched domains from DB:", data);
       setRows(
         data.map((d: any) => ({
           id: d.id,
