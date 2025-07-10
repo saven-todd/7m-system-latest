@@ -291,7 +291,7 @@ export default function DomainsPage() {
         {loading ? (
           <Box>
             {/* <Skeleton variant="rounded" width="100%" height={200} /> */}
-            <div className="p-6 flex items-center justify-center">
+            <div className="p-6 flex h-[30vh] items-center justify-center">
               <div className="animate-spin text-blue-500 w-8 h-8 border-4 border-blue-200 border-t-blue-500 rounded-full"></div>
             </div>
           </Box>

@@ -1,7 +1,7 @@
 /* File: src/app/globals.css */
 @import "tailwindcss";
-@tailwind base;
-@tailwind components;
+@import "tailwindcss/preflight";
+@import "tailwindcss/components";
 @tailwind utilities;
 
 /* จากนั้นค่อย :root ต่อได้ */
