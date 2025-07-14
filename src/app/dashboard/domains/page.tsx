@@ -141,7 +141,7 @@ export default function DomainsPage() {
       headerName: "URL",
       flex: 1,
       renderCell: (params: GridRenderCellParams) => (
-        console.log("Rendering URL cell:", params.row.id),
+        
         <Box>
           <Link href={`/dashboard/domains/${params.row.id}`}>
             <strong>{params.value}</strong>
